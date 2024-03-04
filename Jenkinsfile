@@ -53,9 +53,9 @@ node {
       // deploy docker image to nexus
       withCredentials([file(credentialsId: 'gcr-file', variable: 'GC_KEY')]){
         sh "echo \"Docker Image Tag Name: ${dockerImageTag}\""
-        sh "cat '$GC_KEY' | docker login -u _json_key --password-stdin https://gcr.io"
+        sh "cat '$GC_KEY' | docker login -u _json_key --password-stdin https://us-east1-docker.pkg.dev"
         sh "gcloud auth activate-service-account --key-file='$GC_KEY'"
-        sh "gcloud auth configure-docker"
+        sh "gcloud auth configure-docker us-east1-docker.pkg.dev"
         GLOUD_AUTH = sh (
               script: 'gcloud auth print-access-token',
               returnStdout: true

@@ -50,7 +50,7 @@ node {
     stage('Deploy Docker Image'){
       
       // deploy docker image to nexus
-      withCredentials([file(credentialsId: 'gcr-key', variable: 'GC_KEY')]){
+      withCredentials([file(credentialsId: 'gcr-file', variable: 'GC_KEY')]){
         sh "echo \"Docker Image Tag Name: ${dockerImageTag}\""
         sh "cat '$GC_KEY' | docker login -u _json_key --password-stdin https://gcr.io"
         sh "gcloud auth activate-service-account --key-file='$GC_KEY'"

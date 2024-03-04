@@ -44,6 +44,7 @@ node {
       
       dockerImage = docker.build("hello-world-java","-f hello-world-src/Dockerfile .")
 
+      sh "docker tag hello-world-java:latest ${dockerImageTag}"
       sh "docker images -a"
     }
    

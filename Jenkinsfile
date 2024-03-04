@@ -48,7 +48,7 @@ node {
       sh "docker images -a"
     }
    
-    stage('Deploy Docker Image'){
+    stage('Pushing Docker Image'){
       
       // deploy docker image to nexus
       withCredentials([file(credentialsId: 'gcr-file', variable: 'GC_KEY')]){

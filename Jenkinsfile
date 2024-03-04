@@ -42,7 +42,7 @@ node {
       //sh "ls -all /var/run/docker.sock"
       sh "mv ./hello-world-src/target/hello*.jar ./data" 
       
-      dockerImage = docker.build("hello-world-java","-f hello-world-src/Dockerfile")
+      dockerImage = docker.build("hello-world-java","-f hello-world-src/Dockerfile .")
 
       sh "docker images -a"
     }

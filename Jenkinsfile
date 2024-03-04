@@ -25,7 +25,7 @@ node {
       sh '''
         cd hello-world-src
         ls -al
-        '${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+        '${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package
         '''
     }
 	

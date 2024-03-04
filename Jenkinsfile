@@ -13,7 +13,7 @@ node {
     
     stage('Clone Repo') { // for display purposes
       // Get some code from a GitHub repository
-      git branch: '${BRANCH_NAME}', url: 'https://github.com/goutamjaiswal214/devops-end-to-end.git'
+      git branch: 'jenkins', url: 'https://github.com/goutamjaiswal214/devops-end-to-end.git'
       // Get the Maven tool.
       // ** NOTE: This 'maven-3.6.1' Maven tool must be configured
       // **       in the global configuration.           
@@ -22,11 +22,7 @@ node {
   
     stage('Build Project') {
       // build project via maven
-      sh '''
-        cd hello-world-src
-        ls -al
-        ${mvnHome}/bin/mvn -Dmaven.test.failure.ignore clean package
-        '''
+      sh "'${mvnHome}/bin/mvn' -f hello-world-src/pom.xml -Dmaven.test.failure.ignore clean package"
     }
 	
 	// stage('Publish Tests Results'){

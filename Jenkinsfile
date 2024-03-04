@@ -44,7 +44,7 @@ node {
       
       dockerImage = docker.build("hello-world-java","-f hello-world-src/Dockerfile .")
 
-      sh "docker tag hello-world-java:latest ${dockerImageTag}"
+      sh "docker tag hello-world-java:latest us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${dockerImageName}:${env.BUILD_NUMBER}"
       sh "docker images -a"
     }
    
@@ -61,7 +61,7 @@ node {
               returnStdout: true
           ).trim()
         echo "Pushing image To GCR"
-        sh "docker push us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${image_name}:${image-tag}"
+        sh "docker push us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${dockerImageName}:${env.BUILD_NUMBER}"
       }
 
       // sh "docker login -u admin -p admin123 ${dockerRepoUrl}"

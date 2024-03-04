@@ -5,7 +5,7 @@ mkdir -p jenkins-docker-certs
 
 echo "Creating Docker DIND"
 
-docker network create jenkins
+# docker network create jenkins
 
 
 docker run --name jenkins-docker --rm --detach \

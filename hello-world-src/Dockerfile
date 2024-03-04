@@ -2,9 +2,9 @@
 
 FROM maven:3.8.5-openjdk-11 AS maven_build
 
-COPY pom.xml /tmp/
+COPY hello-world-src/pom.xml /tmp/
 
-COPY src /tmp/src/
+COPY hello-world-src/src /tmp/src/
 
 WORKDIR /tmp/
 

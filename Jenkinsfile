@@ -47,14 +47,24 @@ node {
       sh "docker images -a"
     }
    
-    // stage('Deploy Docker Image'){
+    stage('Deploy Docker Image'){
       
-    //   // deploy docker image to nexus
+      // deploy docker image to nexus
+      withCredentials([file(credentialsId: 'gcr-key', variable: 'GC_KEY')]){
+        sh "echo \"Docker Image Tag Name: ${dockerImageTag}\""
+        sh "cat '$GC_KEY' | docker login -u _json_key --password-stdin https://gcr.io"
+        sh "gcloud auth activate-service-account --key-file='$GC_KEY'"
+        sh "gcloud auth configure-docker"
+        GLOUD_AUTH = sh (
+              script: 'gcloud auth print-access-token',
+              returnStdout: true
+          ).trim()
+        echo "Pushing image To GCR"
+        sh "docker push us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${image_name}:${image-tag}"
+      }
 
-    //   echo "Docker Image Tag Name: ${dockerImageTag}"
-
-    //   sh "docker login -u admin -p admin123 ${dockerRepoUrl}"
-    //   sh "docker tag ${dockerImageName} ${dockerImageTag}"
-    //   sh "docker push ${dockerImageTag}"
-    // }
+      // sh "docker login -u admin -p admin123 ${dockerRepoUrl}"
+      // sh "docker tag ${dockerImageName} ${dockerImageTag}"
+      // sh "docker push ${dockerImageTag}"
+    }
 }

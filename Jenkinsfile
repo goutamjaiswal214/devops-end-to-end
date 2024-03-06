@@ -84,4 +84,9 @@ node {
         '''
       }
     }
+
+    stage("Cleanup") {
+      sh "docker image rm hello-world-java:latest"
+      sh "docker image rm us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${dockerImageName}:${BRANCH_NAME}"
+    }
 }

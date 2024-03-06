@@ -24,18 +24,6 @@ node {
       // build project via maven
       sh "'${mvnHome}/bin/mvn' -f hello-world-src/pom.xml -Dmaven.test.failure.ignore clean package"
     }
-	
-	// stage('Publish Tests Results'){
-    //   parallel(
-    //     publishJunitTestsResultsToJenkins: {
-    //       echo "Publish junit Tests Results"
-	// 	  junit '**/target/surefire-reports/TEST-*.xml'
-	// 	  archive 'target/*.jar'
-    //     },
-    //     publishJunitTestsResultsToSonar: {
-    //       echo "This is branch b"
-    //   })
-    // }
 		
     stage('Build Docker Image') {
       // build docker image
@@ -48,11 +36,12 @@ node {
       sh "docker tag hello-world-java:latest us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${dockerImageName}:${BRANCH_NAME}"
     }
 
- stage('Sonar Scan'){
+    stage('Sonar Scan'){
       
       // deploy docker image to nexus
       withCredentials([string(credentialsId: 'sonar_token', variable: 'SONAR_TOKEN')]){
        sh '''
+        cd hello-world-src
         mvn clean verify sonar:sonar \
         -Dsonar.projectKey=java-app \
         -Dsonar.projectName='java-app' \

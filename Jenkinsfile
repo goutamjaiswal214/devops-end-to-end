@@ -50,10 +50,8 @@ node {
       }
     }
 
-     stage('Trivy Scan'){
-       sh '''
-        trivy image us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${dockerImageName}:${BRANCH_NAME}
-       '''
+    stage('Trivy Scan'){
+      sh "trivy image us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${dockerImageName}:${BRANCH_NAME}"
     }
    
     stage('Pushing Docker Image'){

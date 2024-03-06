@@ -9,7 +9,7 @@ node {
     
     def dockerRepoUrl = "localhost:8083"
     def dockerImageName = "hello-world-java"
-    def dockerImageTag = "${dockerRepoUrl}/${dockerImageName}:${env.BUILD_NUMBER}"
+    def dockerImageTag = "${dockerRepoUrl}/${dockerImageName}:${BRANCH_NAME}"
     
     stage('Clone Repo') { // for display purposes
       // Get some code from a GitHub repository
@@ -45,7 +45,7 @@ node {
       
       dockerImage = docker.build("hello-world-java","-f hello-world-src/Dockerfile .")
 
-      sh "docker tag hello-world-java:latest us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${dockerImageName}:${env.BUILD_NUMBER}"
+      sh "docker tag hello-world-java:latest us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${dockerImageName}:${BRANCH_NAME}"
       sh "docker images -a"
     }
    
@@ -62,7 +62,7 @@ node {
               returnStdout: true
           ).trim()
         echo "Pushing image To GCR"
-        sh "docker push us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${dockerImageName}:${env.BUILD_NUMBER}"
+        sh "docker push us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${dockerImageName}:${BRANCH_NAME}"
       }
     }
 

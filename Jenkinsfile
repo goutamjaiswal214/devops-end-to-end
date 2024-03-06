@@ -68,7 +68,8 @@ node {
 
     stage('Deploying App to GKE'){
       // deploy docker image to nexus
-      withCredentials([file(credentialsId: 'gcr-file', variable: 'GC_KEY')]){
+      withCredentials([file(credentialsId: 'gcr-file', variable: 'GC_KEY'),string(credentialsId: 'sonar_token', variable: 'SONAR_TOKEN')]){
+        sh 'echo $SONAR_TOKEN'
         sh "gcloud auth activate-service-account --key-file=$GC_KEY"
         sh "gcloud config set project molten-medley-415817"
         sh "gcloud container clusters get-credentials molten-medley-415817-gke --region us-west4 --project molten-medley-415817"

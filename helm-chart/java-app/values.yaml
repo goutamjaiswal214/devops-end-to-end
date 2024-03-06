@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: us-east1-docker.pkg.dev/molten-medley-415817/hello-world/hello-world-java
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "jenkins"
 

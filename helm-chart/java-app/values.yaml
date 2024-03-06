@@ -8,7 +8,7 @@ image:
   repository: us-east1-docker.pkg.dev/molten-medley-415817/hello-world/hello-world-java
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "17"
+  tag: "jenkins"
 
 imagePullSecrets: []
 nameOverride: ""

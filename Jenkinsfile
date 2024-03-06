@@ -63,9 +63,15 @@ node {
         echo "Pushing image To GCR"
         sh "docker push us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${dockerImageName}:${env.BUILD_NUMBER}"
       }
+    }
 
-      // sh "docker login -u admin -p admin123 ${dockerRepoUrl}"
-      // sh "docker tag ${dockerImageName} ${dockerImageTag}"
-      // sh "docker push ${dockerImageTag}"
+    stage('Deploying App to GKE'){
+      // deploy docker image to nexus
+      withCredentials([file(credentialsId: 'gcr-file', variable: 'GC_KEY')]){
+        sh "gcloud auth activate-service-account --key-file=$GC_KEY"
+        sh "gcloud config set project molten-medley-415817"
+        sh "gcloud container clusters get-credentials molten-medley-415817-gke --region us-west4 --project molten-medley-415817"
+        sh "kubectl get ns"
+      }
     }
 }

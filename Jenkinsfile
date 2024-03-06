@@ -37,8 +37,7 @@ node {
     }
 
     stage('Sonar Scan'){
-      
-      // deploy docker image to nexus
+
       withCredentials([string(credentialsId: 'sonar_token', variable: 'SONAR_TOKEN')]){
        sh '''
         cd hello-world-src
@@ -49,6 +48,12 @@ node {
         -Dsonar.token=$SONAR_TOKEN
        '''
       }
+    }
+
+     stage('Trivy Scan'){
+       sh '''
+        trivy image us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${dockerImageName}:${BRANCH_NAME}
+       '''
     }
    
     stage('Pushing Docker Image'){

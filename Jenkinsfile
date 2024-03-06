@@ -73,8 +73,10 @@ node {
         sh "gcloud config set project molten-medley-415817"
         sh "gcloud container clusters get-credentials molten-medley-415817-gke --region us-west4 --project molten-medley-415817"
         sh "helm upgrade --install my-java-app java-app --namespace java-app"
-        sh "export SERVICE_IP=$(kubectl get svc --namespace java-app my-java-app --template \"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}\")"
-        sh "echo \"Your Application is live on: echo http://$SERVICE_IP:8080\""
+        sh '''
+        export SERVICE_IP=$(kubectl get svc --namespace java-app my-java-app --template "{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}")
+        echo "Your Application is live on: echo http://$SERVICE_IP:8080"
+        '''
       }
     }
 }

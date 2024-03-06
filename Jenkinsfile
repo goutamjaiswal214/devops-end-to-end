@@ -48,21 +48,32 @@ node {
       sh "docker tag hello-world-java:latest us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${dockerImageName}:${BRANCH_NAME}"
       sh "docker images -a"
     }
+
+    stage('Build Docker Image') {
+      // build docker image
+      //sh "ls -all /var/run/docker.sock"
+      withCredentials([file(credentialsId: 'gcr-file', variable: 'GC_KEY')]){
+        sh "echo $BRANCH_NAME"
+        sh "mv ./hello-world-src/target/hello*.jar ./data" 
+        
+        dockerImage = docker.build("hello-world-java","-f hello-world-src/Dockerfile .")
+
+        sh "docker tag hello-world-java:latest us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${dockerImageName}:${BRANCH_NAME}"
+        sh "docker images -a"
+      }
+    }
    
-    stage('Pushing Docker Image'){
+    stage('Sonar Scan'){
       
       // deploy docker image to nexus
-      withCredentials([file(credentialsId: 'gcr-file', variable: 'GC_KEY')]){
-        sh "echo \"Docker Image Tag Name: ${dockerImageTag}\""
-        sh "cat '$GC_KEY' | docker login -u _json_key --password-stdin https://us-east1-docker.pkg.dev"
-        sh "gcloud auth activate-service-account --key-file='$GC_KEY'"
-        sh "gcloud auth configure-docker us-east1-docker.pkg.dev"
-        GLOUD_AUTH = sh (
-              script: 'gcloud auth print-access-token',
-              returnStdout: true
-          ).trim()
-        echo "Pushing image To GCR"
-        sh "docker push us-east1-docker.pkg.dev/molten-medley-415817/hello-world/${dockerImageName}:${BRANCH_NAME}"
+      withCredentials([string(credentialsId: 'sonar_token', variable: 'SONAR_TOKEN')]){
+        sh '''
+          mvn clean verify sonar:sonar \
+          -Dsonar.projectKey=java-app \
+          -Dsonar.projectName='java-app' \
+          -Dsonar.host.url=http://34.16.178.168:9000 \
+          -Dsonar.token=$SONAR_TOKEN
+        '''
       }
     }
 

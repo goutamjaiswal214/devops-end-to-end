@@ -40,7 +40,7 @@ node {
     stage('Build Docker Image') {
       // build docker image
       //sh "ls -all /var/run/docker.sock"
-      sh "echo \"env.BRANCH_NAME\""
+      sh "echo $BRANCH_NAME"
       sh "mv ./hello-world-src/target/hello*.jar ./data" 
       
       dockerImage = docker.build("hello-world-java","-f hello-world-src/Dockerfile .")
@@ -72,7 +72,7 @@ node {
         sh "gcloud auth activate-service-account --key-file=$GC_KEY"
         sh "gcloud config set project molten-medley-415817"
         sh "gcloud container clusters get-credentials molten-medley-415817-gke --region us-west4 --project molten-medley-415817"
-        sh "helm upgrade --install my-java-app java-app --namespace java-app"
+        sh "helm upgrade --install my-java-app helm-chart/java-app --namespace java-app"
         sh '''
         export SERVICE_IP=$(kubectl get svc --namespace java-app my-java-app --template "{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}")
         echo "Your Application is live on: echo http://$SERVICE_IP:8080"
